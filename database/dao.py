@@ -1,6 +1,4 @@
 from database.DB_connect import DBConnect
-from model.interazione import Interazione
-
 
 class DAO:
 
@@ -11,41 +9,64 @@ class DAO:
         cromosomi = []     # Lista di cromosomi : int
 
         cursor = conn.cursor(dictionary=True)
-        query = """ SELECT DISTINCT cromosoma
-                    FROM gene
-                    WHERE cromosoma != 0"""
+        query = """ select distinct cromosoma
+                    from gene
+                    where cromosoma > 0"""
 
         cursor.execute(query)
 
         for row in cursor:
-            cromosomi.append(row["cromosoma"])
+            cromosomi.append(row['cromosoma'])
 
         cursor.close()
         conn.close()
         return cromosomi
 
     @staticmethod
-    def get_interazioni():
+    def get_correlazioni():
         conn = DBConnect.get_connection()
 
-        interazioni = []     # Lista di oggetti Interazione: [(id_gene1, id_gene2, cromosoma_1, cromosoma_2, correlazione),...]
+        correlazioni = []     # Lista di liste, dove la lista interna sarà [cromosoma1, cromosoma2, peso]
 
         cursor = conn.cursor(dictionary=True)
-        query = """ select distinct id_gene1, id_gene2, g1.cromosoma as cromosoma_1, g2.cromosoma as cromosoma_2, correlazione
+        query = """ select distinct g1.cromosoma as cromosoma1, g2.cromosoma as cromosoma2, correlazione
                     from gene g1, gene g2, interazione i
-                    where i.id_gene1 = g1.id and i.id_gene2 = g2.id and g1.cromosoma != g2.cromosoma"""
+                    where g1.id = i.id_gene1 and g2.id = i.id_gene2 and 
+                          g1.cromosoma != g2.cromosoma and g1.cromosoma > 0 and g2.cromosoma > 0"""
 
         cursor.execute(query)
 
         for row in cursor:
-            interazione = Interazione(id_gene1 = row["id_gene1"],
-                                      id_gene2 = row["id_gene2"],
-                                      cromosoma_1 = row["cromosoma_1"],
-                                      cromosoma_2 = row["cromosoma_2"],
-                                      correlazione = row["correlazione"])
-            interazioni.append(interazione)
+            cromosoma1 = row['cromosoma1']
+            cromosoma2 = row['cromosoma2']
+            peso = float(row['correlazione'])
+            lista = [cromosoma1, cromosoma2, peso]
+            correlazioni.append(lista)
+
+
 
         cursor.close()
         conn.close()
-        return interazioni
+        return correlazioni
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

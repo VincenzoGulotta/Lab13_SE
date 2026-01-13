@@ -39,14 +39,16 @@ class View:
             width=200,
             hint_text="Soglia (s)"
         )
-        self.btn_conta_edges = ft.ElevatedButton(text="Conta Archi", on_click=self.controller.handle_conta_edges)
+        self.btn_conta_edges = ft.ElevatedButton(text="Conta Archi", on_click=self.controller.handle_conta_edges,
+                                                 disabled = True)
         row2 = ft.Row([self.txt_name, self.btn_conta_edges],
                       alignment=ft.MainAxisAlignment.CENTER)
 
         self.lista_visualizzazione_2 = ft.ListView(expand=1, spacing=10, padding=20, auto_scroll=True)
 
         # Sezione 3
-        self.btn_ricerca = ft.ElevatedButton(text="Cerca Cammino", on_click=self.controller.handle_ricerca)
+        self.btn_ricerca = ft.ElevatedButton(text="Cerca Cammino", on_click=self.controller.handle_ricerca,
+                                             disabled = True)
         self.lista_visualizzazione_3 = ft.ListView(expand=1, spacing=10, padding=20, auto_scroll=True)
 
         # --- Toggle Tema ---
