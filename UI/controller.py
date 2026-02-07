@@ -24,7 +24,7 @@ class Controller:
 
         try:
             if self.soglia.isdigit():
-                if not (3 <= float(self.soglia) <= 7):
+                if not (3 <= float(self.soglia) <= 7) or self.soglia is None:
                     self._view.show_alert("Inserisci un valore compreso tra 3 e 7")
                     self.soglia = None
 
